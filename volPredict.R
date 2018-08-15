@@ -4,6 +4,7 @@ library(spikeslab)
 library(quantmod)
 library(xts)
 library(stringr)
+library(purrr)
 
 
 system.time(vola_prediction(asset = "SPFB.SI",
