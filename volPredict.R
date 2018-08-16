@@ -6,6 +6,7 @@ library(xts)
 library(stringr)
 library(purrr)
 
+
 system.time(vola_prediction(asset = "SPFB.SI",
                             tikers = c("CBOT.TY", "RGBI", "VIX", "SPFB.Si"),
                             dateFrome = "2017-01-01",
