@@ -4,7 +4,7 @@ library(spikeslab)
 library(quantmod)
 library(xts)
 library(stringr)
-
+library(purrr)
 
 system.time(vola_prediction(asset = "SPFB.SI",
                             tikers = c("CBOT.TY", "RGBI", "VIX", "SPFB.Si"),
@@ -12,7 +12,7 @@ system.time(vola_prediction(asset = "SPFB.SI",
                             estimators = c("yang.zhang", "close"),
                             volaPeriod = c(3, 5, 10, 60),
                             Y = "yang.zhang_5",
-                            nLags = seq(3:10),
+                            nLags = 5:10,
                             daysPredict = 5))
 
 
@@ -71,7 +71,7 @@ vola_prediction <-  function(asset, tikers, dateFrome, dateEnd = Sys.Date(), per
   top_regressors <- table(ss_model$names[included_regressors$value]) %>% 
     melt(.) %>% 
     arrange(desc(.$value)) %>% 
-    mutate(prob = round((.$value / nrow(included_regressors)), 5)) %>% 
+    mutate(prob = round((.$value / ssIter * 100), 5)) %>% 
     .[seq(ss_model$phat),] %>% print(.)
   
   
@@ -88,9 +88,9 @@ vola_prediction <-  function(asset, tikers, dateFrome, dateEnd = Sys.Date(), per
   
   df_predict <- rbind(js, m.xts)
   
-  periodicity(d)
-  
   predict_model <- predict(lm_model, df_predict, interval = "prediction", vcov. = vcovHAC(lm_model))
+  
+  print(ss_model)
   print(tail(predict_model, daysPredict))
   
 }
